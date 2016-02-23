@@ -1,0 +1,26 @@
+{
+  "name": "sam",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "./node_modules/.bin/webpack-dev-server --content-base dist --no-info --colors --hot --inline --progress",
+    "build": "rm -f dist/* && NODE_ENV=production node ./node_modules/.bin/webpack --progress --colors && npm run cp:index",
+    "clean": "rm -f dist/* && npm run cp:index",
+    "cp:index": "cp src/index.html dist/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gunar C. Gessner <gunar@gunargessner.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.3",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-es2015-loose": "^7.0.0",
+    "babel-preset-react": "6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "react": "^0.14.7",
+    "redux": "^3.3.1",
+    "webpack": "^1.12.14"
+  }
+}
