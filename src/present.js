@@ -9,7 +9,7 @@ const present = (dataset, state) => {
     if (dataset && dataset.type) {
 
       const alwaysAllowed = ['INCREMENT', 'DECREMENT', 'CLEAR_MESSAGE', 'SET_TIMER', 'LAUNCH'];
-      if (dataset && dataset.type && alwaysAllowed.indexOf(dataset.type) > -1) {
+      if (alwaysAllowed.indexOf(dataset.type) > -1) {
         dispatch(dataset)
       }
 
