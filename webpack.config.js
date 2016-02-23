@@ -11,11 +11,6 @@ const config = {
     publicPath: '/',
   },
   plugins: [
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: JSON.stringify(ENV) },
-    }),
   ],
   resolve: {
   //   alias: {
@@ -37,7 +32,11 @@ const config = {
 if (ENV === 'production') {
   config.plugins.push(
     new webpack.NoErrorsPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': { NODE_ENV: JSON.stringify(ENV) },
+    })
   );
   config.output.publicPath = './';
 } else {

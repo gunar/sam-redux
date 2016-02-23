@@ -1,11 +1,19 @@
 import { combineReducers } from 'redux'
 
-const counter = (state = 5, action = {}) => {
+const value = (state = 5, action = {}) => {
   switch (action.type) {
     case 'INCREMENT':
       return state + 1
     case 'DECREMENT':
       return state - 1
+    default:
+      return state
+  }
+}
+const message = (state = 'no message', action = {}) => {
+  switch (action.type) {
+    case 'SHOW_MESSAGE':
+      return action.message
     default:
       return state
   }
@@ -22,6 +30,7 @@ const status = (state = 'STOPPED', action = {}) => {
 }
 
 export default combineReducers({
-  counter,
+  value,
   status,
+  message,
 })
