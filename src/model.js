@@ -19,13 +19,6 @@ const createModel = () => {
     nap(store.getState())(present);
   }
 
-  const replaceReducer = nextReducer => {
-    currentReducer = nextReducer;
-    present({ type: '@@redux/INIT' })
-  }
- 
-  present({ type: '@@redux/INIT' })
-
   const subscribe = listener => {
     listeners.push(listener)
     // Send current state to new listener
