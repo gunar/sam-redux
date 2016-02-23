@@ -6,6 +6,7 @@
   "scripts": {
     "watch": "./node_modules/.bin/webpack-dev-server --content-base dist --no-info --colors --hot --inline --progress",
     "build": "rm -f dist/* && NODE_ENV=production node ./node_modules/.bin/webpack --progress --colors && npm run cp:index",
+    "build:dev": "rm -f dist/* && node ./node_modules/.bin/webpack --progress --colors && npm run cp:index",
     "clean": "rm -f dist/* && npm run cp:index",
     "cp:index": "cp src/index.html dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
