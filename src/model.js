@@ -16,7 +16,7 @@ const createModel = () => {
 
   const mergeStateToPresent = dataset => {
     present(dataset, store.getState())(store.dispatch)
-    nap(store.getState())(present);
+    nap(store.getState())(mergeStateToPresent);
   }
 
   const subscribe = listener => {
