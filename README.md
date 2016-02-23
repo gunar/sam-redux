@@ -9,6 +9,10 @@ Also, it uses a very simple React component for the View.
 
 This repo intends to extend the discussion about SAM happening in [Gitter](https://gitter.im/jdubray/sam-architecture).
 
+## Building
+
+Clone the repo and run `npm run watch` to live edit the source or `npm run build` to build into `/dist`.
+
 ## How it works
 
 TODO
