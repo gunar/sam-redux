@@ -1,50 +1,82 @@
-const present = (dataset, state) => {
+const MESSAGE_DURATION = 5
+
+const showMessage = message => {
   return dispatch => {
 
-    if (dataset === undefined) {
-      // ignore TICK
-      return
-    }
+    dispatch({
+      type: 'SHOW_MESSAGE',
+      message,
+      date: (new Date()),
+    })
 
-    if (dataset && dataset.type) {
+  }
+}
 
-      const alwaysAllowed = ['INCREMENT', 'DECREMENT', 'CLEAR_MESSAGE', 'SET_TIMER', 'LAUNCH'];
-      if (alwaysAllowed.indexOf(dataset.type) > -1) {
-        dispatch(dataset)
-      }
+const present = (dataset, state) => {
+  return dispatch => {
+    console.log('Present:', dataset)
 
-      if (dataset.type === 'ABORT') {
-        if (state.status === 'STARTED') {
-          dispatch(dataset)
-          dispatch({
-            type: 'SHOW_MESSAGE',
-            message: 'Launch aborted.',
-            date: (new Date()),
-          })
-        }
-      }
+    // Action presenting new value to model
+    // Model may accept or reject
 
-      if (dataset.type === 'START') {
+    const isReady = state.status === 'READY'
+    const hasStarted = state.status === 'STARTED'
+    const wantsToStart = dataset.status === 'STARTED'
+    const timerIsValid = state.timer >= 10 && state.timer <= 15
 
-        if (state.timer >= 10 && state.timer <= 15) {
+    if (isReady) {
+
+      if (wantsToStart) {
+        // Condition for starting: Valid start time
+        if (timerIsValid) {
           dispatch({
             type: 'START',
-            date: (new Date()),
-            timer: state.timer,
+            countdown: state.timer,
           })
-          dispatch({
-            type: 'SHOW_MESSAGE',
-            message: 'Countdown started.',
-            date: (new Date()),
-          })
+          showMessage('Countdown started!')(dispatch)
 
         } else {
-          dispatch({ type: 'SHOW_MESSAGE', message: 'Launch not allowed.', date: (new Date()) })
+          showMessage('Launch not allowed')(dispatch)
         }
       }
 
-    } else {
-      console.error('Dataset invalid:', dataset)
+      if (dataset.incrementBy !== undefined) {
+        dispatch({
+          type: 'INCREMENT',
+          by: dataset.incrementBy,
+        })
+      }
+      if (dataset.decrementBy !== undefined) {
+        dispatch({
+          type: 'DECREMENT',
+          by: dataset.decrementBy,
+        })
+      }
+
+    } else if (hasStarted) {
+
+      if (dataset.countdown !== undefined) {
+        // Action presenting new value for the countdown
+        dispatch({ type: 'SET_COUNTDOWN', value: dataset.countdown })
+      }
+
+      if (dataset.abort) {
+        dispatch({ type: 'ABORT' })
+        showMessage('Launch aborted')(dispatch)
+      }
+
+    }
+
+    if (dataset.message !== undefined) {
+        // Action presenting new value for the message
+      if (!dataset.message) {
+        // Action wants to clear message
+        const elapsed = (new Date() - state.message.date)/1000
+        // Verify the current message should be cleared before accepting this
+        if (elapsed >= MESSAGE_DURATION-1) {
+          dispatch({ type: 'CLEAR_MESSAGE'  })
+        }
+      }
     }
 
   }

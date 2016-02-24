@@ -15,19 +15,25 @@ Clone the repo and run `npm run watch` to live edit the source or `npm run build
 
 ## How it works
 
-TODO
+### Actions
+
+The View `present()`s values to the Model, which decides whether to accept them.
+Accepting means mutating the store with the received value.
+Redux is used for this mutation, allowing for Time-travel and Hot Reloading of the reducers.
+
+### nap (Next Action Predicate)
+
+Runs after the Model has mutated (or not) and may dispatch automatic actions based on the State.
+
+E.g. `if (countingDown) { decreaseCounter() }` (pseudocode)
+
+## State
+
+In SAM, the [State is a pure function of the Model](./src/state.js) (i.e. Store), and like React the View is a pure function of the State
+(that's why there is no V in SAM: State -> View).
 
 ## SAM
 
 SAM is State-Action-Model. It's a software architecture propsed by Jean-Jacques Dubray in his (in)famous article [Why I no longer use MVC Frameworks](http://www.ebpml.org/blog15/2015/12/why-i-no-longer-use-mvc-frameworks/) / [Part 2](http://www.ebpml.org/blog15/2015/12/why-i-no-longer-use-mvc-frameworks-part-2/) and [Introducing the SAM pattern as an alternative to MVC](http://www.ebpml.org/blog15/2016/01/introducing-the-sam-pattern-as-an-alternative-to-mvc/).
 
 Dubray states that SAM is based on TLA+ concepts pioneered by Dr. Lamport.
-
-## Issues
-
-### Ticking
-
-Ticking is used for all timeouts (message displaying, countdown timer).
-A new ticking routine is started on every action. I allow this to happen believing that this empty calls 'present()' are cheap.
-This allows me not to have to keep track of the ticks which would pollute the store/state and the Redux-history.
-I believe a better solution would be to make a switching flag in the reducers (TICK, TICKING, TACK) and have Debugger/Time-Travel ignore this Actions.

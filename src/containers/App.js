@@ -1,20 +1,32 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import state from '../state'
+
 const App = ({
-  timer,
-  isStopped,
+  // State
+  isReady,
   isRunning,
   launched,
   aborted,
-  state,
-  present,
+
+  // Store
   message,
+  timer,
+  countdown,
+  store,
+
+  present,
 }) => {
-  const inc = _ => present({ type: 'INCREMENT' })
-  const dec = _ => present({ type: 'DECREMENT' })
-  const abort = _ => present({ type: 'ABORT' })
-  const start = _ => present({type: 'START' })
+  const inc = _ => present({ incrementBy: 1 })
+  const dec = _ => present({ decrementBy: 1 })
+  const abort = _ => present({ abort: true })
+  const start = _ => {
+    present({
+      status: 'STARTED',
+      countdown: timer,
+    })
+  }
   return (
     <div className="pure-g">
       <div className="pure-u-1-3" style={{ textAlign: 'center' }}>
@@ -31,7 +43,7 @@ const App = ({
               Your browser does not support the mp4 video codec.
           </video>
         : ''}
-        { isStopped ?
+        { isReady ?
           <div>
             <h2>{ timer }</h2>
             <button className="pure-button" onClick={inc}>+</button>&nbsp;
@@ -42,7 +54,7 @@ const App = ({
         : '' }
         { isRunning ?
           <div>
-            <h2>Countdown: { timer }</h2>
+            <h2>Countdown: { countdown }</h2>
             <button className="pure-button" style={{ backgroundColor: 'rgb(223, 117, 20)'}} onClick={abort}>Abort</button>
           </div>
         : '' }
@@ -52,20 +64,23 @@ const App = ({
       </div>
       <div className="pure-u-1-3">
         <p>Message: {message ? message : '<no message>'}</p>
-        <pre>{JSON.stringify(state).replace(/(,|\{)/g, '$1\n')}</pre>
+        <pre>{JSON.stringify(store).replace(/(,|\{)/g, '$1\n')}</pre>
       </div>
     </div>
   )
 }
 
-const mapStateToProps = state => ({
-  timer: state.timer,
-  isStopped: state.status === 'STOPPED',
-  isRunning: state.status === 'STARTED',
-  launched: state.status === 'LAUNCHED',
-  aborted: state.status === 'ABORTED',
-  message: state.message.payload,
-  state,
+// This is kinda the State being derived from the Model
+const mapStoreToProps = store => ({
+  isReady: state.isReady(store),
+  isRunning: state.isRunning(store),
+  launched: state.launched(store),
+  aborted: state.aborted(store),
+
+  message: store.message.payload,
+  timer: store.timer,
+  countdown: store.countdown,
+  store,
 })
 
-export default connect(mapStateToProps)(App)
+export default connect(mapStoreToProps)(App)
