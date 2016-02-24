@@ -3,38 +3,35 @@ import { combineReducers } from 'redux'
 const timer = (state = 5, action = {}) => {
   switch (action.type) {
     case 'INCREMENT':
-      return state + 1
+      return state + action.by
     case 'DECREMENT':
-      return state - 1
+      return state - action.by
     case 'SET_TIMER':
       return action.value
     default:
       return state
   }
 }
-const start = (state = {}, action = {}) => {
+
+const countdown = (state = 0, action = {}) => {
   switch (action.type) {
+    case 'DECREASE_COUNTDOWN':
+      return state - action.by
+    case 'SET_COUNTDOWN':
+      return action.value
     case 'START':
-      return {
-        date: action.date,
-        timer: action.timer,
-      }
-    case 'ABORT':
-      return {}
-    case 'LAUNCH':
-      return {}
+      return action.countdown
     default:
       return state
   }
 }
-const status = (state = 'STOPPED', action = {}) => {
+
+const status = (state = 'READY', action = {}) => {
   switch (action.type) {
     case 'START':
       return 'STARTED'
     case 'ABORT':
       return 'ABORTED'
-    case 'LAUNCH':
-      return 'LAUNCHED'
     default:
       return state
   }
@@ -47,6 +44,11 @@ const message = (state = {}, action = {}) => {
         payload: action.message,
         date: action.date,
       }
+    case 'ADD_TIMEOUT':
+      return {
+        ...state,
+        hasTimeout: true,
+      }
     case 'CLEAR_MESSAGE':
       return {}
     default:
@@ -57,6 +59,6 @@ const message = (state = {}, action = {}) => {
 export default combineReducers({
   timer,
   status,
-  start,
   message,
+  countdown,
 })
